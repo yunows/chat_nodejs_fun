@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Exercise</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+
+<div class="chat_window">
+    <div class="top_menu">
+        <div class="buttons">
+            <div class="button close"></div>
+            <div class="button minimize"></div>
+            <div class="button maximize"></div>
+        </div>
+        <div class="title">Chat</div>
+    </div>
+    <ul class="messages" id="zone_chat"></ul>
+    <form action="/" method="post" id="formulaire_chat">
+        <div class="bottom_wrapper clearfix">
+            <div class="message_input_wrapper"><input class="message_input" id="message" placeholder="Ecrivez votre message ici..." /></div>
+            <input type="submit" id="envoi_message" class="send_message icon text">
+        </div>
+    </form>
+</div>
+<div class="message_template">
+    <li class="message">
+        <div class="avatar"></div>
+        <div class="text_wrapper">
+            <div class="text"></div>
+        </div>
+    </li>
+</div>
+
+
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+
+    var socket = io.connect('http://localhost');
+
+    socket.on('message', function(data) {
+        console.log(data);
+    });
+    socket.on('err', function(data) {
+        console.log(data);
+    });
+
+    var pseudo = prompt('Quel est votre pseudo ?');
+    socket.emit('new_user', pseudo);
+    document.title = pseudo + ' - ' + document.title;
+
+    socket.on('message' ,function(data) {
+        insertMessage_ex(data.pseudo, data.message);
+    });
+
+    socket.on('nouveau_client', function(pseudo) {
+        $('#zone_chat').prepend('<p><em>' + pseudo + ' a rejoint le Chat !</em></p>');
+    });
+
+    socket.on('status_m', function(data) {
+        if(data.status == 'typing')
+        {
+            $('#zone_chat').prepend('<p id="' + data.pseudo + '">' + data.pseudo + ' est en train d\'ecrire ' + '<p>');
+        }
+        else
+        {
+            $('p').remove('#' + data.pseudo);
+        }
+    })
+
+    $('#formulaire_chat').submit(function () {
+        var message = $('#message').val();
+        socket.emit('message', message);
+        insertMessage(pseudo, message);
+        $('#message').val('').focus();
+        return false;
+    });
+
+    $('#message').focusin(function() {
+        socket.emit('status', {status: 'typing', pseudo: pseudo});
+    });
+
+    $('#message').focusout(function() {
+        socket.emit('status', {status: 'none', pseudo: pseudo});
+    })
+
+    function insertMessage(pseudo, message)
+    {
+        $('#zone_chat').prepend('<li class="message left appeared"><div class="avatar"><strong>' + pseudo + '</strong></div><div class="text_wrapper"><div class="texte">' + message + '</div></div></li>');
+    }
+
+    function insertMessage_ex(pseudo, message)
+    {
+        $('#zone_chat').prepend('<li class="message right appeared"><div class="avatar"><strong>' + pseudo + '</strong></div><div class="text_wrapper"><div class="texte">' + message + '</div></div></li>');
+    }
+</script>
+</body>
+</html>

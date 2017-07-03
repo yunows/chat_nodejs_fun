@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body, html{
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+        }
+
+        .col-1-4{
+            float: left;
+            padding: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="col-1-4"><img src="img/texte.jpg"></div>
+    <div class="col-1-4"><h1>Al Capone</h1><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium animi maxime mollitia, provident quasi quia quis reiciendis sed? Aperiam deleniti ea enim excepturi hic in nam perferendis similique vitae voluptates.</p></div>
+    <div class="col-1-4"><h2>Prohibition</h2><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi, cumque doloremque, eaque enim facilis fugit harum, id in ipsam molestiae nesciunt nihil officia officiis quam qui recusandae repudiandae sed vitae.</p></div>
+    <div class="col-1-4"><h2>Chicago</h2><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At aut doloremque laboriosam laborum magni minus molestiae perferendis perspiciatis quia, ratione sed sequi. Asperiores doloribus error tempora. Ad eaque quo voluptatum.</p><img src="img/texte.jpg"></div>
+
+
+    <div class="DivId" style="display: block;"></div>
+    <script>
+        var imgs = document.getElementsByTagName("img");
+        var divs = document.getElementsByClassName("col-1-4");
+        imgs[1].style.cssText = 'display: none;';
+        imgs[0].setAttribute("src", "alcapone.jpg");
+        imgs[0].style.cssText = 'width: 100%;';
+        divs[1].style.cssText = 'background-color: black; color: white; height: 500px;';
+        divs[2].getElementsByTagName("h2")[0].style.cssText = 'text-decoration: underline;';
+    </script>
+</body>
+</html>
